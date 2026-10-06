@@ -3,13 +3,16 @@ import { PostsRepository, Post } from '../../../database/posts/index.js';
 import { UsersRepository } from '../../../database/users/index.js';
 import { CreatePostDto } from '../dto/index.js';
 import { UpdatePostDto } from '../dto/index.js';
+import { BaseService } from '../../../common/base.service.js';
 
 @Injectable()
-export class PostsService {
+export class PostsService extends BaseService<Post> {
   constructor(
     private readonly postsRepo: PostsRepository,
     private readonly usersRepo: UsersRepository,
-  ) {}
+  ) {
+    super();
+  }
 
   findAll(): Promise<Post[]> {
     return this.postsRepo.findAll();

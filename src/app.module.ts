@@ -1,5 +1,7 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
+import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './modules/users/users.module.js';
 import { PostsModule } from './modules/posts/posts.module.js';
@@ -29,6 +31,20 @@ import { Comment } from './database/comments/index.js';
     PostsModule,
     CommentsModule,
     NewsModule,
+  ],
+  providers: [
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+      }),
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
+    },
   ],
 })
 export class AppModule { }
