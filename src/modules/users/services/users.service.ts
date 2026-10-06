@@ -2,10 +2,14 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { UsersRepository } from '../../../database/users/index.js';
 import { User } from '../../../database/users/index.js';
 import { CreateUserDto } from '../dto/index.js';
+import { Post, PostsRepository } from '../../../database/posts/index.js';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly usersRepo: UsersRepository) {}
+  constructor(
+    private readonly usersRepo: UsersRepository,
+    private readonly postsRepo: PostsRepository,
+  ) {}
 
   findAll(): Promise<User[]> {
     return this.usersRepo.findAll();
@@ -28,5 +32,11 @@ export class UsersService {
   async remove(id: number): Promise<User> {
     const user = await this.findOne(id);
     return this.usersRepo.remove(user);
+  }
+
+  async findPostsByUser(userId: number): Promise<Post[]> {
+    const user = await this.usersRepo.findById(userId);
+    if (!user) throw new NotFoundException(`User #${userId} not found`);
+    return this.postsRepo.findAllByAuthorId(userId);
   }
 }

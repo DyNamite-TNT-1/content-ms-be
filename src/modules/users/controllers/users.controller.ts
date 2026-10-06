@@ -6,7 +6,7 @@ import { CreateUserDto } from '../dto/index.js';
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Get()
   findAll() {
@@ -26,5 +26,10 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.remove(id);
+  }
+
+  @Get(':id/posts')
+  findPosts(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.findPostsByUser(id);
   }
 }
