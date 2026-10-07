@@ -4,12 +4,14 @@ import { UsersRepository } from '../../../database/users/index.js';
 import { CreatePostDto } from '../dto/index.js';
 import { UpdatePostDto } from '../dto/index.js';
 import { BaseService } from '../../../common/base.service.js';
+import { CommentsRepository, Comment } from '../../../database/comments/index.js';
 
 @Injectable()
 export class PostsService extends BaseService<Post> {
   constructor(
     private readonly postsRepo: PostsRepository,
     private readonly usersRepo: UsersRepository,
+    private readonly commentsRepo: CommentsRepository,
   ) {
     super();
   }
@@ -18,10 +20,13 @@ export class PostsService extends BaseService<Post> {
     return this.postsRepo.findAll();
   }
 
-  async findOne(id: number): Promise<Post> {
-    const post = await this.postsRepo.findById(id);
+  async findOne(id: number): Promise<Post & { comments: Comment[] }> {
+    const [post, comments] = await Promise.all([
+      this.postsRepo.findById(id),
+      this.commentsRepo.findByPost(id),
+    ]);
     if (!post) throw new NotFoundException(`Post #${id} not found`);
-    return post;
+    return { ...post, comments };
   }
 
   async create(dto: CreatePostDto): Promise<Post> {
