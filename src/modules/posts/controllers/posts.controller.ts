@@ -3,7 +3,7 @@ import { PostsService } from '../services/index.js';
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 import { CreatePostDto, FilterPostsDto, UpdatePostDto } from '../dto/index.js';
 
-@ApiTags('posts')
+@ApiTags('Post')
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}

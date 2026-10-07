@@ -2,6 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { NewsService } from './news.service.js';
 import { CreateNewsDto } from './dto/create-news.dto.js';
 import { UpdateNewsDto } from './dto/update-news.dto.js';
+import { ApiTags } from '@nestjs/swagger';
+
+@ApiTags('News')
 @Controller('news')
 export class NewsController {
   constructor(private readonly newsService: NewsService) {}
